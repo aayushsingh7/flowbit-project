@@ -153,4 +153,5 @@ agent = Agent(
 )
 
 server = VannaFastAPIServer(agent)
-server.run()  
+port = int(os.getenv("PORT", 8000))  
+server.run(host="0.0.0.0", port=port)
