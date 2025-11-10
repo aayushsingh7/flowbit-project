@@ -11,7 +11,7 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 4000;
 
-app.get("/user", async (req, res) => {
+app.get("/v1/user", async (req, res) => {
   try {
     const newUser = await prisma.user.create({
       data: { name: "trail-user", email: "trail-user@gmail.com" },
@@ -25,7 +25,7 @@ app.get("/user", async (req, res) => {
   }
 });
 
-app.get("/stats", async (req, res) => {
+app.get("/v1/stats", async (req, res) => {
   try {
     const now = new Date();
     const startOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -138,7 +138,7 @@ app.get("/stats", async (req, res) => {
   }
 });
 
-app.get("/vendors/top-by-invoice", async (req, res) => {
+app.get("/v1/vendors/top-by-invoice", async (req, res) => {
   try {
     const currentYear = 2025;
     const startDateOfYear = new Date(currentYear, 0, 1);
@@ -197,7 +197,7 @@ app.get("/vendors/top-by-invoice", async (req, res) => {
   }
 });
 
-app.get("/invoice-trends", async (req, res) => {
+app.get("/v1/invoice-trends", async (req, res) => {
   try {
     const trends = await prisma.$queryRaw`
      SELECT
@@ -224,7 +224,7 @@ app.get("/invoice-trends", async (req, res) => {
   }
 });
 
-app.get("/vendors/top10", async (req, res) => {
+app.get("/v1/vendors/top10", async (req, res) => {
   try {
     const vendorSpend = await prisma.invoice.groupBy({
       by: ["vendorId"],
@@ -271,7 +271,7 @@ app.get("/vendors/top10", async (req, res) => {
   }
 });
 
-app.get("/category-spend", async (req, res) => {
+app.get("/v1/category-spend", async (req, res) => {
   try {
     const categorySpend = await prisma.lineItem.groupBy({
       by: ["categoryId"],
@@ -314,7 +314,7 @@ app.get("/category-spend", async (req, res) => {
   }
 });
 
-app.get("/cash-outflow", async (req, res) => {
+app.get("/v1/cash-outflow", async (req, res) => {
   try {
     const outflowData = await prisma.$queryRaw`
       SELECT
@@ -372,7 +372,7 @@ app.get("/cash-outflow", async (req, res) => {
   }
 });
 
-app.get("/invoices", async (req, res) => {
+app.get("/v1/invoices", async (req, res) => {
   try {
     const {
       vendorId,
@@ -448,7 +448,7 @@ app.get("/invoices", async (req, res) => {
   }
 });
 
-app.post("/chat-with-data", async (req, res) => {
+app.post("/v1/chat-with-data", async (req, res) => {
   try {
     const { message } = req.body;
     const vannaRes = await fetch(`${process.env.VANNA_SERVICE_API}/chat_sse`, {
