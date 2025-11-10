@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  @@map("users")
+}
+
+model Vendor {
+  id          String    @id @default(uuid())
+  name        String
+  partyNumber String?   @unique @db.VarChar(64)
+  address     String?
+  taxId       String?   @db.VarChar(64)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  invoices    Invoice[]
+  totalSpend  Decimal?  @db.Decimal(30, 2)
+
+  @@map("vendors")
+}
+
+model Customer {
+  id        String    @id @default(uuid())
+  name      String
+  address   String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  invoices  Invoice[]
+
+  @@map("customers")
+}
+
+model Invoice {
+  id            String    @id @default(uuid())
+  invoiceNumber String?
+  invoiceDate   DateTime?
+  invoiceTotal  Decimal?  @db.Decimal(30, 2)
+  isCreditNote  Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  payment   Payment? @relation(fields: [paymentId], references: [id])
+  paymentId String?  @unique
+
+  vendorId String?
+  vendor   Vendor? @relation(fields: [vendorId], references: [id], onDelete: SetNull)
+
+  lineItems LineItem[]
+  document   Document? 
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId String?
+
+  @@map("invoices")
+}
+
+model Payment {
+  id              String    @id @default(uuid())
+  dueDate         DateTime?
+  paymentTerms    String?
+  bankAccount     String?
+  bic             String?
+  accountName     String?
+  netDays         Int?      @default(0)
+  discountPercent Decimal?  @db.Decimal(5, 2)
+  discountDays    Int?
+  discountedTotal Decimal?  @db.Decimal(30, 2)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  invoice Invoice?
+
+  @@map("payments")
+}
+
+model Category {
+  id        String     @id @default(uuid())
+  code      String?    @unique
+  name      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  lineItems LineItem[]
+
+  @@map("categories")
+}
+
+model Document {
+  id             String   @id @default(uuid())
+  fileName       String
+  filePath       String
+  fileSizeBytes  Int?
+  fileType       String?
+  status         String? 
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  organizationId String?
+  departmentId   String?
+  metadata       Json? 
+  extractedData  Json? 
+  validated      Boolean  @default(false)
+  invoice   Invoice? @relation(fields: [invoiceId], references: [id]) 
+  invoiceId String?  @unique
+
+  @@map("documents")
+}
+
+model LineItem {
+  id           String    @id @default(uuid())
+  invoiceId    String
+  invoice      Invoice   @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  srNo         Int?
+  description  String?
+  quantity     Decimal?  @db.Decimal(20, 4)
+  unitPrice    Decimal?  @db.Decimal(30, 2)
+  totalPrice   Decimal?  @db.Decimal(30, 2)
+  sachkonto    String? 
+  buschluessel String?
+  categoryId   String?
+  category     Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([invoiceId])
+  @@index([sachkonto])
+
+  @@map("lineitems")
+}
