@@ -214,7 +214,9 @@ async function migrateData() {
   console.log("----------------------------------------");
   console.log("Migration complete. All documents processed.");
   console.log("----------------------------------------");
-  console.log("=> Next step: Run 'node updateTotalSpends.js' to calculate vendor spends.");
+  console.log("")
+  console.log("====> Next step: Run 'node src/utils/updateTotalSpends.js' to calculate vendor spends. <====");
+  console.log("")
 }
 
 migrateData()

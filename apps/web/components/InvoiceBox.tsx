@@ -84,11 +84,10 @@ const InvoiceBox: React.FC<InvoiceBoxProps> = ({ invoice }) => {
 
   return (
     <div className="w-full mb-[10px] rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-300 hover:shadow-lg">
-      {/* Header: Invoice Number and Status Badge */}
       <div className="flex items-start justify-between border-b-[2px] border-gray-200 pb-4">
         <div>
           <p className="text-sm font-medium text-gray-500">Invoice</p>
-          <p className="text-xl font-bold text-gray-800">#{invoiceNumber}</p>
+          <p className="text-xl font-bold text-gray-800">{invoiceNumber}</p>
         </div>
         <span
           className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${badgeColor}`}
@@ -98,7 +97,6 @@ const InvoiceBox: React.FC<InvoiceBoxProps> = ({ invoice }) => {
         </span>
       </div>
 
-      {/* Body: Vendor & Customer Details */}
       <div className="my-5 space-y-4">
         <div className="flex items-start gap-3">
           <Building className="mt-1 h-5 w-5 flex-shrink-0 text-gray-400" />
@@ -120,10 +118,8 @@ const InvoiceBox: React.FC<InvoiceBoxProps> = ({ invoice }) => {
         </div>
       </div>
 
-      {/* Footer: Dates & Amount */}
       <div className="rounded-lg bg-gray-50 p-4">
         <div className="flex items-end justify-between gap-4">
-          {/* Date Information */}
           <div className="space-y-3">
             <div className="flex items-start gap-2">
               <Calendar className="h-4 w-4 text-gray-500" />
@@ -145,7 +141,6 @@ const InvoiceBox: React.FC<InvoiceBoxProps> = ({ invoice }) => {
             </div>
           </div>
 
-          {/* Amount Information */}
           <div className="text-right">
             <p className="text-sm font-medium text-gray-500">Total</p>
             <p className={`text-3xl font-bold ${totalColor}`}>
