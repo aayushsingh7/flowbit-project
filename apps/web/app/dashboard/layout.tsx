@@ -14,7 +14,7 @@ interface LayoutProps {
 const dashboardOptions = [
   { name: "Dashboard", path: "/dashboard", icon: "/home.png", disabled: false },
   {
-    name: "Invoice",
+    name: "Invoices",
     path: "/dashboard/invoices",
     icon: "/bill.png",
     disabled: false,
@@ -146,7 +146,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
 
             <div className="flex items-center justify-center p-[15px]">
-              <img src="logo.png" alt="logo" className="w-[25px] h-[25px] mr-[10px]"/>
+              <img
+                src="logo.png"
+                alt="logo"
+                className="w-[25px] h-[25px] mr-[10px]"
+              />
               <h3 className="font-bold text-xl">Flowbit AI</h3>
             </div>
           </div>
@@ -155,7 +159,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       <div className="sm:ml-64">
         <header className="p-3 px-6 border-b border-gray-300 flex items-center justify-between">
-          <h3 className="font-bold">Dashboard</h3>
+          <h3 className="font-bold">
+            {currentPath
+              .split("/")
+              .filter(Boolean)
+              .map(
+                (segment) => segment.charAt(0).toUpperCase() + segment.slice(1)
+              )
+              .join(" > ")}
+          </h3>
           <div className="flex items-center ">
             <img
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLA994hpL3PMmq0scCuWOu0LGsjef49dyXVg&s"

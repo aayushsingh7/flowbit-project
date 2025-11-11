@@ -12,20 +12,7 @@ import {
 } from "recharts";
 import Loader from "../Loader";
 
-const data = [
-  { name: "Jan", invoiceCount: 0, totalSpend: 0 },
-  { name: "Feb", invoiceCount: 0, totalSpend: 0 },
-  { name: "Mar", invoiceCount: 0, totalSpend: 0 },
-  { name: "Apr", invoiceCount: 0, totalSpend: 0 },
-  { name: "May", invoiceCount: 0, totalSpend: 0 },
-  { name: "Jun", invoiceCount: 0, totalSpend: 0 },
-  { name: "Jul", invoiceCount: 0, totalSpend: 0 },
-  { name: "Aug", invoiceCount: 4, totalSpend: 5680 },
-  { name: "Sep", invoiceCount: 0, totalSpend: 0 },
-  { name: "Oct", invoiceCount: 0, totalSpend: 0 },
-  { name: "Nov", invoiceCount: 2, totalSpend:  -710},
-  { name: "Dec", invoiceCount: 0, totalSpend: 0 },
-].map((d) => ({ ...d, fixedBar: 5 }));
+
 
 interface LineBarComposedChartInterface {
   loading:boolean;
@@ -55,9 +42,10 @@ const CustomToolTip = ({ active, payload, label }: any) => {
 };
 
 const LineBarComposedChart:React.FC<LineBarComposedChartInterface> = ({loading,rawData}) => {
- 
+  const month = ["Jan", "Fed", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"]
+  const data = rawData.map((d:any,index:number)=> ({name:month[index],invoiceCount:d.invoiceCount,totalSpend:Number(d.totalSpend),fixedBar:20}))
   return (
-    <div className="w-full  p-1 border border-gray-300 rounded-md bg-white">
+    <div className="w-full h-full p-1 border border-gray-300 rounded-md bg-white">
       <div className="p-3">
         {" "}
         <h1 className="text-xl font-bold">
@@ -71,12 +59,13 @@ const LineBarComposedChart:React.FC<LineBarComposedChartInterface> = ({loading,r
       <ResponsiveContainer
         width="100%"
         height={400}
-        style={{ marginLeft: "-20px" }}
+        style={{ marginLeft: "-20px"}}
       >
             <ComposedChart
+            height={"100%"}
           data={data}
         >
-          <CartesianGrid stroke="#f5f5f5" />
+          {/* <CartesianGrid stroke="#f5f5f5" /> */}
           <XAxis
             dataKey="name"
             style={{ fontSize: "13px"}}
@@ -89,6 +78,7 @@ const LineBarComposedChart:React.FC<LineBarComposedChartInterface> = ({loading,r
             axisLine={false}
             tickLine={false}
           />
+          
           <Tooltip content={<CustomToolTip />} />
           <defs>
             <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
@@ -110,6 +100,7 @@ const LineBarComposedChart:React.FC<LineBarComposedChartInterface> = ({loading,r
             fill="url(#barGradient)"
             radius={[4, 4, 0, 0]}
             activeBar={{fill:"url(#barActiveGradient)"}}
+            
           />
 
           <Line

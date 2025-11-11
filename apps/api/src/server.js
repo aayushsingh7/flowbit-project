@@ -197,25 +197,39 @@ app.get("/v1/vendors/top-by-invoice", async (req, res) => {
   }
 });
 
+
 app.get("/v1/invoice-trends", async (req, res) => {
   try {
+    const year = 2025;
     const trends = await prisma.$queryRaw`
-     SELECT
-        TO_CHAR("invoiceDate", 'YYYY-MM') AS month,
-        COUNT(id)::int AS "invoiceCount",
-        SUM("invoiceTotal") AS "totalSpend"
-      FROM "invoices"
-      WHERE "invoiceDate" IS NOT NULL AND EXTRACT(YEAR FROM "invoiceDate") = 2025
-      GROUP BY month
-      ORDER BY month ASC;
+      WITH all_months AS (
+        SELECT TO_CHAR(m, 'YYYY-MM') AS month
+        FROM generate_series(
+          (${year} || '-01-01')::date,
+          (${year} || '-12-01')::date,
+          '1 month'::interval
+        ) AS m
+      ),
+      invoice_data AS (
+        SELECT
+          TO_CHAR("invoiceDate", 'YYYY-MM') AS month,
+          COUNT(id)::int AS "invoiceCount",
+          SUM("invoiceTotal") AS "totalSpend"
+        FROM "invoices"
+        WHERE "invoiceDate" IS NOT NULL AND EXTRACT(YEAR FROM "invoiceDate") = ${year}
+        GROUP BY month
+      )
+
+      SELECT
+        am.month,
+        COALESCE(id."invoiceCount", 0) AS "invoiceCount",
+        COALESCE(id."totalSpend", 0) AS "totalSpend"
+      FROM all_months am
+      LEFT JOIN invoice_data id ON am.month = id.month
+      ORDER BY am.month ASC;
     `;
+    res.json(trends);
 
-    const formattedTrends = trends.map((t) => ({
-      ...t,
-      totalSpend: t.totalSpend || 0,
-    }));
-
-    res.json(formattedTrends);
   } catch (err) {
     console.error(err);
     res

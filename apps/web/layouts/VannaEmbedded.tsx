@@ -7,14 +7,14 @@ export default function VannaEmbedded() {
     const script = document.createElement("script");
     script.type = "module";
     script.src = "https://img.vanna.ai/vanna-components.js";
-    document.head.appendChild(script);
+    document.body.appendChild(script);
   }, []);
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
       {!isOpen && (
         <button
-          className="text-black flex items-center justify-center px-6 py-4 rounded-full shadow-lg text-2xl bg-white border-[2px] border-gray-400"
+          className="text-gray-500 flex items-center justify-center px-6 py-4 rounded-full shadow-lg text-xl bg-white border-[2px] border-gray-400 font-bold"
           onClick={() => setIsOpen(true)}
         >
            <img src="/chat.png" alt={`chat-icon`} className="w-7 h-7 mr-[15px]"/> Chat with Data
@@ -31,11 +31,12 @@ export default function VannaEmbedded() {
           </button>
           {/* @ts-ignore */}
           <vanna-chat
-            api-base="http://localhost:8000"
-            sse-endpoint="http://localhost:8000/api/vanna/v2/chat_sse"
-            ws-endpoint="http://localhost:8000/api/vanna/v2/chat_websocket"
-            poll-endpoint="http://localhost:8000/api/vanna/v2/chat_poll"
-            class="flex-1"  /* adapt styling */
+            id="vanna-chat"
+            api-base={`${process.env.NEXT_PUBLIC_VANNA_API_URL}`}
+            sse-endpoint={`${process.env.NEXT_PUBLIC_VANNA_API_URL}/api/vanna/v2/chat_sse`}
+            ws-endpoint={`${process.env.NEXT_PUBLIC_VANNA_API_URL}/api/vanna/v2/chat_websocket`}
+            poll-endpoint={`${process.env.NEXT_PUBLIC_VANNA_API_URL}/api/vanna/v2/chat_poll`}
+            class="flex-1 vanna-chat"  /* adapt styling */
             style={{ width: "100%", height: "100%", display: "block" }}
           />
         </div>
