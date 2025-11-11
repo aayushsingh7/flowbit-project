@@ -1,23 +1,23 @@
-# Flowbit Project - Monorepo Setup Guide
+# Flowbit Project – Monorepo Setup Guide
 
-A comprehensive guide to set up and run the **Flowbit Project**. This monorepo includes frontend, backend, and a Python-based service with PostgreSQL integration.
+A comprehensive guide to set up and run the **Flowbit Project**.  
+This monorepo includes the frontend, backend, and a Python-based service with PostgreSQL integration.
 
-### [QUICK VIDEO DEMO](https://youtu.be/rZgeYt4bgcE)
-### Hostings
-  - Frontend: []()
-  - Backend: [https://api-flowbit-project.vercel.app/](https://api-flowbit-project.vercel.app/)
-  - Vanna Service: [https://vanna-chat.onrender.com/](https://vanna-chat.onrender.com/)
+---
+
+## Live Demo
+- **Quick Video Demo:** https://youtu.be/rZgeYt4bgcE
+
+## Deployments
+- **Frontend:** https://flowbit-project.vercel.app/
+- **Backend:** https://api-flowbit-project.vercel.app/
+- **Vanna Service:** https://vanna-chat.onrender.com/
 
 ---
 
 # Table of Contents
 
 
-
-- [Flowbit Project - Monorepo Setup Guide](#flowbit-project---monorepo-setup-guide)
-    - [QUICK VIDEO DEMO](#quick-video-demo)
-    - [Hostings](#hostings)
-- [Table of Contents](#table-of-contents)
 - [1. Project Requirements](#1-project-requirements)
 - [2. Repository Structure](#2-repository-structure)
 - [3. Installation](#3-installation)
