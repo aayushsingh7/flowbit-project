@@ -404,10 +404,18 @@ Mr. John Doe" },
 
 Allows natural-language queries mapped to PostgreSQL via LLM.
 
-**Response:**
-
-```json
-{}
+**Request Body**
 ```
+JSON.stringify({message:"How many customers we have?"})
+```
+
+**Response (streaming SSE):**
+
+```
+{
+  "message": "We have a total of 11 customers."
+}
+```
+
 # 7. ER Diagram
 ![](https://res.cloudinary.com/dvk80x6fi/image/upload/v1762837672/ERD_acglfe.png)

@@ -3,6 +3,7 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
+import { parseServerSentEvents } from "parse-sse";
 const prisma = new PrismaClient();
 
 const app = express();
@@ -462,25 +463,53 @@ app.get("/v1/invoices", async (req, res) => {
   }
 });
 
+
 app.post("/v1/chat-with-data", async (req, res) => {
   try {
     const { message } = req.body;
+
     const vannaRes = await fetch(`${process.env.VANNA_SERVICE_API}/chat_sse`, {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         conversation_id: "demo-conversation-id-4592342",
         message,
         metaData: {},
-        request_id: "demo-requset-id-23239",
+        request_id: "demo-request-id-23239",
       }),
     });
+
+    if (!vannaRes.ok) {
+      throw new Error(`Vanna service responded with status: ${vannaRes.status}`);
+    }
+    let finalText = "";
+    const eventStream = parseServerSentEvents(vannaRes);
+    for await (const event of eventStream) {
+      if (event.data === "[DONE]") {
+        break;
+      }
+      
+      try {
+        const json = JSON.parse(event.data);
+        if (json.simple && json.simple.text) {
+          finalText += json.simple.text; 
+        }
+      } catch (e) {
+        console.error("Failed to parse individual SSE data chunk:", event.data, e);
+      }
+    }
+
+    res.json({ message: finalText });
+
   } catch (err) {
-    console.error(err);
-    res
-      .status(500)
-      .send({ success: false, message: "Oops! something went wrong" });
+    console.error("Error in /v1/chat-with-data:", err);
+    res.status(500).send({
+      success: false,
+      message: "Oops! Something went wrong.",
+    });
   }
 });
+
 
 app.listen(PORT, (err) => {
   if (err) console.error("❌ Error while starting the server:", err);
